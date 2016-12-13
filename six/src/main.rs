@@ -10,11 +10,12 @@ fn main() {
 fn solve(file_name: &str, line_len: i32) -> Result<&str, io::Error> {
     let file = File::open(file_name)?;
     let input = BufReader::new(file);
-    let freq_lists = Vec::new();
+    let mut freq_lists = Vec::new();
     for _ in 0..line_len {
-        freq_lists.push(HashMap::new());
+        freq_lists.push(HashMap::<&str, i32>::new());
     }
     println!("{:?}", freq_lists.len());
+    
     for line in input.lines() {
         println!("{:?}", line.unwrap());
     }
