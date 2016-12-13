@@ -7,19 +7,32 @@ fn main() {
     println!("Answer: {}", solve("large.in", 8).unwrap());
 }
 
-fn solve(file_name: &str, line_len: i32) -> Result<&str, io::Error> {
+fn solve(file_name: &str, line_len: i32) -> Result<String, io::Error> {
     let file = File::open(file_name)?;
     let input = BufReader::new(file);
     let mut freq_lists = Vec::new();
     for _ in 0..line_len {
-        freq_lists.push(HashMap::<&str, i32>::new());
+        freq_lists.push(HashMap::<char, i32>::new());
     }
     println!("{:?}", freq_lists.len());
-    
+
     for line in input.lines() {
-        println!("{:?}", line.unwrap());
+        for (i, c) in line.unwrap().chars().enumerate() {
+            if freq_lists[i].contains_key(&c) {
+                *freq_lists[i].get_mut(&c).unwrap() += 1;
+            } else {
+                freq_lists[i].insert(c, 0);
+            }
+        }
     }
-    Ok("ok")
+    let mut winners = Vec::new();
+    for hm in freq_lists.into_iter() {
+        winners.push(hm.into_iter()
+            .fold(('_', -1),
+                  |prev, next| if prev.1 > next.1 { prev } else { next }));
+    }
+    Ok(format!("{}",
+               winners.into_iter().map(|pair| pair.0).collect::<String>()))
 }
 
 #[cfg(test)]
@@ -28,6 +41,6 @@ mod tests {
 
     #[test]
     fn small() {
-        assert_eq!(solve("small.in", 6).unwrap(), "easter");
+        assert_eq!(solve("small.in", 6).unwrap(), "easter".to_string());
     }
 }
