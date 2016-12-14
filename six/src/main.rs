@@ -24,8 +24,8 @@ fn solve(file_name: &str, line_len: i32) -> Result<String, io::Error> {
     let mut winners = Vec::new();
     for hm in freq_lists.into_iter() {
         winners.push(hm.into_iter()
-            .fold(('_', -1),
-                  |prev, next| if prev.1 > next.1 { prev } else { next }));
+            .fold(('_', i32::max_value()),
+                  |prev, next| if prev.1 < next.1 { prev } else { next }));
     }
     Ok(format!("{}",
                winners.into_iter().map(|pair| pair.0).collect::<String>()))
@@ -37,6 +37,6 @@ mod tests {
 
     #[test]
     fn small() {
-        assert_eq!(solve("small.in", 6).unwrap(), "easter".to_string());
+        assert_eq!(solve("small.in", 6).unwrap(), "advent".to_string());
     }
 }
