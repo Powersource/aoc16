@@ -18,11 +18,7 @@ fn solve(file_name: &str, line_len: i32) -> Result<String, io::Error> {
 
     for line in input.lines() {
         for (i, c) in line.unwrap().chars().enumerate() {
-            if freq_lists[i].contains_key(&c) {
-                *freq_lists[i].get_mut(&c).unwrap() += 1;
-            } else {
-                freq_lists[i].insert(c, 0);
-            }
+            *freq_lists[i].entry(c).or_insert(0) += 1;
         }
     }
     let mut winners = Vec::new();
